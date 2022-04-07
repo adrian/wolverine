@@ -1,3 +1,12 @@
 urls:
     - https://httpstat.us/503
     - https://httpstat.us/200
+
+test_urls:
+    - https://www.google.com
+    - https://www.17od.com
+    - https://httpstat.us/200?sleep=6000
+    - https://www.irishtimes.com
+    - https://news.ycombinator.com
+    - https://www.microsoft.com
+    - https://www.bbc.co.uk
