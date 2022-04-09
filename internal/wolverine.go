@@ -18,18 +18,14 @@ func init() {
 	prometheus.MustRegister(urlUp)
 }
 
-func MonitorURL(url string, httpClient *http.Client) {
-	const sleepSeconds = 5
-
-	for {
-		start := time.Now()
-		resp, err := httpClient.Head(url)
-		if err != nil {
-			log.Printf("Error: %s", err)
-		} else {
-			duration := time.Since(start)
-			log.Printf("URL: %s, Status: %d, Duration: %dms", url, resp.StatusCode, duration.Milliseconds())
-		}
-		time.Sleep(sleepSeconds * time.Second)
+func MonitorURL(url string, httpClient *http.Client) (error, *http.Response) {
+	start := time.Now()
+	resp, err := httpClient.Head(url)
+	if err != nil {
+		log.Printf("Error: %s", err)
+	} else {
+		duration := time.Since(start)
+		log.Printf("URL: %s, Status: %d, Duration: %dms", url, resp.StatusCode, duration.Milliseconds())
 	}
+	return err, resp
 }

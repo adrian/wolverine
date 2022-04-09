@@ -9,4 +9,7 @@ format:
 clean:
 	rm ${TARGET}
 
-.PHONY: format build clean
+test:
+	go test ./...
+
+.PHONY: format build clean test

@@ -34,9 +34,17 @@ func main() {
 	// monitor each URL in a goroutine
 	httpClient := &http.Client{Timeout: requestTimeoutSeconds * time.Second}
 	for _, url := range cfg.URLs {
-		go wolverine.MonitorURL(url, httpClient)
+		go monitorURL(url, httpClient)
 	}
 
-	// wait undefinately
+	// wait indefinately
 	select {}
+}
+
+func monitorURL(url string, httpClient *http.Client) {
+	const sleepSeconds = 5
+	for {
+		wolverine.MonitorURL(url, httpClient)
+		time.Sleep(sleepSeconds * time.Second)
+	}
 }
