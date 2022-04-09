@@ -18,20 +18,12 @@ func init() {
 	prometheus.MustRegister(urlUp)
 }
 
-func Monitor(urls []string) {
-	for _, url := range urls {
-		go monitor_url(url)
-	}
-}
-
-func monitor_url(url string) {
-	const requestTimeoutSeconds = 5
+func MonitorURL(url string, httpClient *http.Client) {
 	const sleepSeconds = 5
 
-	client := &http.Client{Timeout: requestTimeoutSeconds * time.Second}
 	for {
 		start := time.Now()
-		resp, err := client.Head(url)
+		resp, err := httpClient.Head(url)
 		if err != nil {
 			log.Printf("Error: %s", err)
 		} else {

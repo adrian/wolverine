@@ -7,6 +7,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"log"
 	"net/http"
+	"time"
 )
 
 type Config struct {
@@ -16,6 +17,7 @@ type Config struct {
 func main() {
 	const metricsPort = 2112
 	const metricsPath = "/metrics"
+	const requestTimeoutSeconds = 5
 
 	log.Printf("Starting prometheus metrics endpoint on port: %d, path: %s",
 		metricsPort, metricsPath)
@@ -29,6 +31,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	wolverine.Monitor(cfg.URLs)
+	// monitor each URL in a goroutine
+	httpClient := &http.Client{Timeout: requestTimeoutSeconds * time.Second}
+	for _, url := range cfg.URLs {
+		go wolverine.MonitorURL(url, httpClient)
+	}
+
+	// wait undefinately
 	select {}
 }
