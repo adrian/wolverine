@@ -20,18 +20,25 @@ func NewTestClient(fn RoundTripFunc) *http.Client {
 	}
 }
 
-// TOOO structure these as a table
-// Mock the duration the http requests take
-
 func TestMonitorURL(t *testing.T) {
-	mockHTTPClient := NewTestClient(func(req *http.Request) *http.Response {
-		assert.Equal(t, "HEAD", req.Method)
-		return &http.Response{
-			StatusCode: 200,
-		}
-	})
+	testCases := []struct {
+		url        string
+		statusCode int
+	}{
+		{"https://httpstat.us/503", 503},
+		{"https://httpstat.us/200", 200},
+	}
+	for _, tc := range testCases {
+		mockHTTPClient := NewTestClient(func(req *http.Request) *http.Response {
+			assert.Equal(t, "HEAD", req.Method)
+			assert.Equal(t, tc.url, req.URL.String())
+			return &http.Response{
+				StatusCode: tc.statusCode,
+			}
+		})
 
-	err, resp := MonitorURL("https://www.google.com", mockHTTPClient)
-	assert.Nil(t, err)
-	assert.Equal(t, 200, resp.StatusCode)
+		_, resp := MonitorURL(tc.url, mockHTTPClient)
+		assert.Equal(t, tc.statusCode, resp.StatusCode)
+	}
+
 }
