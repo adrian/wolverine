@@ -1,6 +1,7 @@
 urls:
     - https://httpstat.us/503
     - https://httpstat.us/200
+    - http://192.168.68.1
 
 test_urls:
     - https://www.google.com
