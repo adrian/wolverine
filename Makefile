@@ -1,6 +1,10 @@
 TARGET=wolverine
+VERSION=0.1.0
 
-build: format
+build: format test
+	docker build --rm -t ${TARGET}:${VERSION} --build-arg VERSION=${VERSION} .
+
+build-local: format test
 	go build -o ${TARGET} cmd/main.go
 
 format:
@@ -12,4 +16,10 @@ clean:
 test:
 	go test ./...
 
-.PHONY: format build clean test
+load-image:
+	kind load docker-image --name wolverine ${TARGET}:${VERSION}
+
+deploy:
+	kubectl apply -f k8s/wolverine.yaml
+
+.PHONY: format build build-local clean test load-image deploy

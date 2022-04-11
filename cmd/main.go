@@ -14,11 +14,14 @@ type Config struct {
 	URLs []string `fig:"urls" default:"[]"`
 }
 
+var BuildVersion = "dev"
+
 func main() {
 	const metricsPort = 2112
 	const metricsPath = "/metrics"
 	const requestTimeoutSeconds = 5
 
+	log.Printf("Starting wolverine version: %s", BuildVersion)
 	log.Printf("Starting prometheus metrics endpoint on port: %d, path: %s",
 		metricsPort, metricsPath)
 	http.Handle(metricsPath, promhttp.Handler())
