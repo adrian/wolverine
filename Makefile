@@ -16,7 +16,7 @@ clean:
 test:
 	go test ./...
 
-load-image:
+kind-load-image:
 	kind load docker-image --name wolverine ${TARGET}:${VERSION}
 
 deploy:

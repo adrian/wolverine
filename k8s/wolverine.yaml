@@ -23,6 +23,10 @@ spec:
       app: wolverine
   template:
     metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /metrics
+        prometheus.io/port: "2112"
       labels:
         app: wolverine
     spec:
